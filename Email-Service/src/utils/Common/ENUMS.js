@@ -1,0 +1,8 @@
+STATUS_ENUMS={
+    PENDING:"PENDING",
+    SUCCESS:"SUCCESS",
+    FAILED:"FAILED"
+}
+module.exports={
+    STATUS_ENUMS
+}

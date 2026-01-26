@@ -1,0 +1,513 @@
+{
+  "info": {
+    "_postman_id": "f8a1b2c3-d4e5-4f6a-8b9c-0d1e2f3a4b5c",
+    "name": "Flights API",
+    "description": "A comprehensive API collection for the Flights booking system. This API provides endpoints for managing airplanes, airports, cities, and flights.\n\n## Base URL\n`http://localhost:3000/api/v1`\n\n## Response Format\nAll responses follow a standard format:\n```json\n{\n  \"success\": true/false,\n  \"message\": \"Description of the result\",\n  \"data\": {},\n  \"error\": {}\n}\n```\n\n## Resources\n- **Info**: Health check endpoint\n- **Airplanes**: Manage airplane fleet\n- **Cities**: Manage cities\n- **Airports**: Manage airports\n- **Flights**: Manage flight schedules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Info",
+      "item": [
+        {
+          "name": "Get API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["info"]
+            },
+            "description": "Health check endpoint to verify the API is running.\n\n**Response:**\n- `200 OK` - API is live"
+          },
+          "response": []
+        }
+      ],
+      "description": "API health check and information endpoints"
+    },
+    {
+      "name": "Airplanes",
+      "item": [
+        {
+          "name": "Create Airplane",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelNo\": \"Boeing 737\",\n  \"capacity\": 180\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airplanes",
+              "host": ["{{baseUrl}}"],
+              "path": ["airplanes"]
+            },
+            "description": "Create a new airplane in the system.\n\n**Required Fields:**\n- `modelNo` (string): Model number of the airplane (required)\n- `capacity` (integer): Passenger capacity (default: 0, max: 1000)\n\n**Response:**\n- `201 Created` - Airplane created successfully\n- `400 Bad Request` - Model number is required"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Airplanes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airplanes",
+              "host": ["{{baseUrl}}"],
+              "path": ["airplanes"]
+            },
+            "description": "Retrieve a list of all airplanes.\n\n**Response:**\n- `200 OK` - Returns array of airplanes"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Airplane by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airplanes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airplanes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airplane ID"
+                }
+              ]
+            },
+            "description": "Retrieve a specific airplane by its ID.\n\n**Path Parameters:**\n- `id` (integer): Airplane ID\n\n**Response:**\n- `200 OK` - Returns airplane details\n- `404 Not Found` - Airplane not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Airplane",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelNo\": \"Boeing 737 MAX\",\n  \"capacity\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airplanes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airplanes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airplane ID"
+                }
+              ]
+            },
+            "description": "Update an existing airplane.\n\n**Path Parameters:**\n- `id` (integer): Airplane ID\n\n**Body Fields (all optional):**\n- `modelNo` (string): Model number\n- `capacity` (integer): Passenger capacity (must be > 0)\n\n**Response:**\n- `200 OK` - Airplane updated successfully\n- `400 Bad Request` - Capacity cannot be negative or zero\n- `404 Not Found` - Airplane not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Airplane",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airplanes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airplanes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airplane ID"
+                }
+              ]
+            },
+            "description": "Delete an airplane by ID.\n\n**Path Parameters:**\n- `id` (integer): Airplane ID\n\n**Response:**\n- `200 OK` - Airplane deleted successfully\n- `404 Not Found` - Airplane not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing the airplane fleet. Airplanes are associated with flights."
+    },
+    {
+      "name": "Cities",
+      "item": [
+        {
+          "name": "Create City",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Delhi\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/city",
+              "host": ["{{baseUrl}}"],
+              "path": ["city"]
+            },
+            "description": "Create a new city.\n\n**Required Fields:**\n- `name` (string): City name (required, unique)\n\n**Response:**\n- `201 Created` - City created successfully\n- `400 Bad Request` - Name is required"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/city",
+              "host": ["{{baseUrl}}"],
+              "path": ["city"]
+            },
+            "description": "Retrieve a list of all cities.\n\n**Response:**\n- `200 OK` - Returns array of cities"
+          },
+          "response": []
+        },
+        {
+          "name": "Get City by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/city/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["city", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "City ID"
+                }
+              ]
+            },
+            "description": "Retrieve a specific city by its ID.\n\n**Path Parameters:**\n- `id` (integer): City ID\n\n**Response:**\n- `200 OK` - Returns city details\n- `404 Not Found` - City not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update City",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mumbai\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/city/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["city", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "City ID"
+                }
+              ]
+            },
+            "description": "Update an existing city.\n\n**Path Parameters:**\n- `id` (integer): City ID\n\n**Required Fields:**\n- `name` (string): New city name\n\n**Response:**\n- `200 OK` - City updated successfully\n- `400 Bad Request` - Name is required for update\n- `404 Not Found` - City not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete City",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/city/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["city", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "City ID"
+                }
+              ]
+            },
+            "description": "Delete a city by ID. Note: Deleting a city will cascade delete associated airports.\n\n**Path Parameters:**\n- `id` (integer): City ID\n\n**Response:**\n- `200 OK` - City deleted successfully\n- `404 Not Found` - City not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing cities. Cities are parent entities for airports."
+    },
+    {
+      "name": "Airports",
+      "item": [
+        {
+          "name": "Create Airport",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Indira Gandhi International Airport\",\n  \"code\": \"DEL\",\n  \"address\": \"New Delhi, India\",\n  \"CityId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airports",
+              "host": ["{{baseUrl}}"],
+              "path": ["airports"]
+            },
+            "description": "Create a new airport.\n\n**Required Fields:**\n- `name` (string): Airport name (required, unique)\n- `code` (string): Airport code (required, unique, e.g., DEL, BOM)\n- `CityId` (integer): ID of the city where airport is located (required)\n\n**Optional Fields:**\n- `address` (string): Airport address\n\n**Response:**\n- `201 Created` - Airport created successfully\n- `400 Bad Request` - Missing required fields"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Airports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airports",
+              "host": ["{{baseUrl}}"],
+              "path": ["airports"]
+            },
+            "description": "Retrieve a list of all airports.\n\n**Response:**\n- `200 OK` - Returns array of airports"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Airport by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airports/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airport ID"
+                }
+              ]
+            },
+            "description": "Retrieve a specific airport by its ID.\n\n**Path Parameters:**\n- `id` (integer): Airport ID\n\n**Response:**\n- `200 OK` - Returns airport details\n- `404 Not Found` - Airport not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Airport",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"IGI Airport Terminal 3\",\n  \"address\": \"Terminal 3, New Delhi\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airports/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airport ID"
+                }
+              ]
+            },
+            "description": "Update an existing airport.\n\n**Path Parameters:**\n- `id` (integer): Airport ID\n\n**Body Fields (at least one required):**\n- `name` (string): Airport name\n- `code` (string): Airport code\n- `address` (string): Airport address\n- `CityId` (integer): City ID\n\n**Response:**\n- `200 OK` - Airport updated successfully\n- `400 Bad Request` - At least one field is required to update\n- `404 Not Found` - Airport not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Airport",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airports/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["airports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airport ID"
+                }
+              ]
+            },
+            "description": "Delete an airport by ID.\n\n**Path Parameters:**\n- `id` (integer): Airport ID\n\n**Response:**\n- `200 OK` - Airport deleted successfully\n- `404 Not Found` - Airport not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing airports. Airports belong to cities and are used as departure/arrival points for flights."
+    },
+    {
+      "name": "Flights",
+      "item": [
+        {
+          "name": "Create Flight",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"flightNumber\": \"AI101\",\n  \"airlineCode\": \"AI\",\n  \"departureAirport\": \"DEL\",\n  \"arrivalAirport\": \"BOM\",\n  \"departureTime\": \"2025-01-15T10:30:00Z\",\n  \"boardingGate\": \"A12\",\n  \"price\": 5500.00,\n  \"totalSeats\": 180,\n  \"airplaneId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/flights",
+              "host": ["{{baseUrl}}"],
+              "path": ["flights"]
+            },
+            "description": "Create a new flight.\n\n**Required Fields:**\n- `flightNumber` (string): Unique flight number (e.g., AI101)\n- `airlineCode` (string): Airline code (e.g., AI for Air India)\n- `departureAirport` (string): Departure airport code\n- `arrivalAirport` (string): Arrival airport code\n- `departureTime` (datetime): Scheduled departure time (ISO 8601 format)\n- `price` (float): Ticket price (must be >= 0)\n- `totalSeats` (integer): Total available seats (must be >= 1)\n- `airplaneId` (integer): ID of the airplane assigned to this flight\n\n**Optional Fields:**\n- `boardingGate` (string): Boarding gate (can be assigned later)\n\n**Response:**\n- `201 Created` - Flight created successfully\n- `400 Bad Request` - Missing required flight fields"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Flights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/flights",
+              "host": ["{{baseUrl}}"],
+              "path": ["flights"]
+            },
+            "description": "Retrieve a list of all flights.\n\n**Response:**\n- `200 OK` - Returns array of flights"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Flight by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/flights/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["flights", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Flight ID"
+                }
+              ]
+            },
+            "description": "Retrieve a specific flight by its ID.\n\n**Path Parameters:**\n- `id` (integer): Flight ID\n\n**Response:**\n- `200 OK` - Returns flight details\n- `404 Not Found` - Flight not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Flight",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"boardingGate\": \"B15\",\n  \"price\": 6000.00,\n  \"departureTime\": \"2025-01-15T11:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/flights/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["flights", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Flight ID"
+                }
+              ]
+            },
+            "description": "Update an existing flight.\n\n**Path Parameters:**\n- `id` (integer): Flight ID\n\n**Body Fields (all optional):**\n- `flightNumber` (string): Flight number\n- `airlineCode` (string): Airline code\n- `departureAirport` (string): Departure airport code\n- `arrivalAirport` (string): Arrival airport code\n- `departureTime` (datetime): Departure time\n- `boardingGate` (string): Boarding gate\n- `price` (float): Ticket price\n- `totalSeats` (integer): Total seats\n- `airplaneId` (integer): Airplane ID\n\n**Response:**\n- `200 OK` - Flight updated successfully\n- `404 Not Found` - Flight not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Flight",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/flights/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["flights", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Flight ID"
+                }
+              ]
+            },
+            "description": "Delete a flight by ID.\n\n**Path Parameters:**\n- `id` (integer): Flight ID\n\n**Response:**\n- `200 OK` - Flight deleted successfully\n- `404 Not Found` - Flight not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing flight schedules. Flights are associated with airplanes and use airports as departure/arrival points."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    }
+  ]
+}
