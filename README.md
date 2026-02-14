@@ -1,82 +1,48 @@
-# 🚀 Node.js Project Template
+This is a base node js project template, which anyone can use as it has been prepared, by keeping some of the most important code principles and project management recommendations. Feel free to change anything. 
 
-This is a base Node.js project template, prepared with some of the most important code principles and project management recommendations. Feel free to change anything to suit your needs!
 
-## 📋 Table of Contents
+`src` -> Inside the src folder all the actual source code regarding the project will reside, this will not include any kind of tests. (You might want to make separate tests folder)
 
-- [Description](#description)
-- [Project Structure](#project-structure)
-- [Setup](#setup)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+Lets take a look inside the `src` folder
 
-## 📖 Description
+ - `config` -> In this folder anything and everything regarding any configurations or setup of a library or module will be done. For example: setting up `dotenv` so that we can use the environment variables anywhere in a cleaner fashion, this is done in the `server-config.js`. One more example can be to setup you logging library that can help you to prepare meaningful logs, so configuration for this library should also be done here. 
 
-This template provides a solid foundation for building Node.js applications. It follows best practices for organizing code, managing configurations, and structuring your project for scalability and maintainability.
+ - `routes` -> In the routes folder, we register a route and the corresponding middleware and controllers to it. 
 
-## 🏗️ Project Structure
+ - `middlewares` -> they are just going to intercept the incoming requests where we can write our validators, authenticators etc. 
 
-Inside the `src` folder, all the actual source code resides (excluding tests, which you might want to place in a separate `tests` folder).
+ - `controllers` -> they are kind of the last middlewares as post them you call you business layer to execute the budiness logic. In controllers we just receive the incoming requests and data and then pass it to the business layer, and once business layer returns an output, we structure the API response in controllers and send the output. 
 
-Let's take a look inside the `src` folder:
+ - `repositories` -> this folder contains all the logic using which we interact the DB by writing queries, all the raw queries or ORM queries will go here.
 
-- 📁 **`config`** - Handles configurations and setup for libraries or modules.  
-  Example: Setting up `dotenv` for environment variables in `server-config.js`, or configuring logging libraries.
+ - `services` -> contains the buiness logic and interacts with repositories for data from the database
 
-- 📁 **`routes`** - Registers routes along with their corresponding middlewares and controllers.
+ - `utils` -> contains helper methods, error classes etc.
 
-- 📁 **`middlewares`** - Intercepts incoming requests for validation, authentication, etc.
+### Setup the project
 
-- 📁 **`controllers`** - Acts as the last middleware layer. Receives requests, passes data to the business layer, and structures API responses.
+ - Download this template from github and open it in your favourite text editor. 
+ - Go inside the folder path and execute the following command:
+  ```
+  npm install
+  ```
+ - In the root directory create a `.env` file and add the following env variables
+    ```
+        PORT=<port number of your choice>
+    ```
+    ex: 
+    ```
+        PORT=3000
+    ```
+ - go inside the `src` folder and execute the following command:
+    ```
+      npx sequelize init
+    ```
+ - By executing the above command you will get migrations and seeders folder along with a config.json inside the config folder. 
+ - If you're setting up your development environment, then write the username of your db, password of your db and in dialect mention whatever db you are using for ex: mysql, mariadb etc
+ - If you're setting up test or prod environment, make sure you also replace the host with the hosted db url.
 
-- 📁 **`repositories`** - Contains logic for database interactions, including raw queries or ORM queries.
-
-- 📁 **`services`** - Holds business logic and interacts with repositories for database data.
-
-- 📁 **`utils`** - Includes helper methods, error classes, and other utilities.
-
-## ⚙️ Setup
-
-Follow these steps to set up the project:
-
-1. 📥 **Download and Open**: Download this template from GitHub and open it in your favorite text editor.
-
-2. 📦 **Install Dependencies**: Navigate to the project folder and run:
-   ```bash
-   npm install
-   ```
-
-3. 🔧 **Environment Variables**: Create a `.env` file in the root directory and add the following:
-   ```
-   PORT=<port number of your choice>
-   ```
-   Example:
-   ```
-   PORT=3000
-   ```
-
-4. 🗄️ **Database Setup**: Go inside the `src` folder and initialize Sequelize:
-   ```bash
-   npx sequelize init
-   ```
-   This will create `migrations`, `seeders`, and `config.json` in the `config` folder.
-
-5. 🔄 **Configure Database**: 
-   - For development: Update `config.json` with your database username, password, and dialect (e.g., mysql, mariadb).
-   - For test/prod: Replace the host with your hosted database URL.
-
-## 🚀 Usage
-
-To run the server in development mode, execute:
-```bash
-npm run dev
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is open-source. Check the license file for more details.
+ - To run the server execute
+ ```
+ npm run dev
+ ```
