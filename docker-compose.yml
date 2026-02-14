@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - app-net
+    # --- ADD THIS HEALTHCHECK ---
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  flights-service:
+    build: ./Flights-Service
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy # Now this will actually work!
+    networks:
+      - app-net
+    volumes:
+      - ./Flights-Service:/app
+      - /app/node_modules        # Protects your libraries
+
+  email-service:
+    build: ./Email-Service
+    restart: always
+    ports:
+      - "3002:3002"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-net
+    volumes:
+      - ./Email-Service:/app
+      - /app/node_modules
+
+  booking-service:
+    build: ./Booking-Service
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-net
+    volumes:
+      - ./Booking-Service:/app
+      - /app/node_modules
+
+  api-gateway:
+    build: ./API-Gateway
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - flights-service
+      - email-service
+      - booking-service # Added this since Gateway usually needs all services
+    networks:
+      - app-net
+    volumes:
+      - ./API-Gateway:/app
+      - /app/node_modules
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
